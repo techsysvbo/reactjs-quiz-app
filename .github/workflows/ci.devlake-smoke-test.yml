@@ -1,0 +1,39 @@
+name: devlake-smoke-test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "feature/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show branch and commit
+        run: |
+          echo "GitHub Actions smoke test"
+          echo "Branch: $GITHUB_REF"
+          echo "SHA: $GITHUB_SHA"
+
+      - name: Verify Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Finish successfully
+        run: echo "Smoke test passed"
+
+  deploy-dev:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Simulated deploy
+        run: echo "deploy-dev completed"
